@@ -1,6 +1,5 @@
 import socket
 import sys
-import re
 
 s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -20,16 +19,22 @@ response = ("HTTP/1.1 200 OK\r\n"
 "\r\n"
 "Hello!\r\n\r\n")
 
+
 while True:
   new_connection = s.accept()
   print(new_connection)
   new_socket = new_connection[0]
   while True:
+    print("getting new data")
     data = new_socket.recv(4096).decode("ISO-8859-1")
     if "\r\n\r\n" in data:
       request = request + data
       print("Received full request {request}".format(request=request))
       print("Sending response {response}".format(response=response))
+      # SERVE A FILE HERE
+      request_headers = request.split("\r\n")
+      file_path = request_headers[0].split()[1].split("/")[-1]
+      print(file_path)
       new_socket.sendall(response.encode("ISO-8859-1"))
       print("Closing")
       new_socket.close()

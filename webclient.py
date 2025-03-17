@@ -3,14 +3,20 @@ import sys
 import re
 
 s = socket.socket()
-host = sys.argv[1]
+full_domain_name = sys.argv[1]
 
 if len(sys.argv) < 3 or sys.argv[2] == '':
-  port = 80
+  print("")
+  print("USAGE: python3 webclient.py [full_path] [port]")
+  print("    Please include a port number as the last argument (even if it's in the host path, i.e. 'http://localhost:3131/my/path/to/file.txt')")
+  print("")
+  sys.exit()
 else:
   port = int(sys.argv[2])
 
-url_parts = re.split(r'^((?:.*?(?=:\/\/))*)(?::\/\/)?(?=.*\.)([A-Za-z0-9\-\.]+)(.*)$', host)[2:4]
+url_parts = re.split(r'^((?:.*?(?=:\/\/))*)(?::\/\/)?(?=.*\.)([A-Za-z0-9\-\.]+)(?::?[0-9]*)(.*)$', full_domain_name)[2:4]
+
+host = url_parts[0]
 
 if url_parts[1] == '':
   path = '/'
