@@ -18,12 +18,22 @@ url_parts = re.split(r'^((?:.*?(?=:\/\/))*)(?::\/\/)?(?=.*\.)([A-Za-z0-9\-\.]+)(
 
 host = url_parts[0]
 
-if url_parts[1] == '':
-  path = '/'
-else:
-  path = url_parts[1]
+try:
+  if url_parts[1] == '':
+    path = '/'
+  else:
+    path = url_parts[1]
+except:
+  print("File name must use a supported extension: txt")
+  sys.exit()
 
-s.connect((host, port))
+s.settimeout(3)
+
+try:
+  s.connect((host, port))
+except Exception as inst:
+  print(inst)
+  sys.exit()
 
 http_request = ("GET {path} HTTP/1.1\r\n"
 "Host: {host}\r\n"
